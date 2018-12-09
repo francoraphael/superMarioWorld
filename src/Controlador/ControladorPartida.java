@@ -1,32 +1,35 @@
-package VisaoControlador;
+package Controlador;
 import Modelo.*;
+import Modelo.Adicional.*;
+import Modelo.Inimigos.Boo;
+import Modelo.Inimigos.Goomba;
+import Modelo.Inimigos.Inimigo;
+import Modelo.Inimigos.PiranhaPlant;
+import Modelo.Personagens.Mario;
+import Modelo.Personagens.Princesa;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.lang.Class;
 
 public class ControladorPartida {
 
-    private Boo boo;
-    private Goomba goomba;
-    private PiranhaPlant piranhaPlant;
-    private Bonus bonus;
-    private int i;
-    private ArrayList<Item> itens = new ArrayList<>();
+    public static EstadoJogo estadoJogo;
 
     public void prepararPartida() {
 
+        int i;
+        ArrayList<Item> itens = new ArrayList<>();
         for (i = 0; i < 98; i++) {
             if (i < 30)
-                itens.add(bonus = new Bonus("Moeda"));
+                itens.add(new Bonus("Moeda"));
             else if (i >= 30 && i < 40)
-                itens.add(bonus = new Bonus("FirePlant"));
+                itens.add(new Bonus("FirePlant"));
             else if (i >= 40 && i < 50)
-                itens.add(goomba = new Goomba());
+                itens.add(new Goomba());
             else if (i >= 50 && i < 57)
-                itens.add(piranhaPlant = new PiranhaPlant());
+                itens.add(new PiranhaPlant());
             else if (i >= 57 && i < 62)
-                itens.add(boo = new Boo());
+                itens.add(new Boo());
             else
                 itens.add(null);
         }
@@ -41,14 +44,15 @@ public class ControladorPartida {
             Mapa.getInstance().salvarItem(itens.get(i), coordenada);
         }
         ControladorInimigos.verificaPiranhaPlantAdjacente();
+        verificaEstadoJogo();
     }
 
     public void efetuarAcao(Acao acao, Direcao direcao) {
+
         Coordenada coordenadaDestinoItem1;
         Coordenada coordenadaDestinoItem2;
         Item item;
         coordenadaDestinoItem1 = ControladorMario.buscaCoordenadaAdjacente(Mario.getInstance().getCoordenada(), direcao);
-        coordenadaDestinoItem2 = ControladorMario.buscaCoordenadaAdjacente(coordenadaDestinoItem1, direcao);
 
         if(coordenadaDestinoItem1 != null) {
             item = Mapa.getInstance().consultaItem(coordenadaDestinoItem1);
@@ -61,6 +65,7 @@ public class ControladorPartida {
                 Mapa.getInstance().salvarItem(Mario.getInstance(), coordenadaDestinoItem1);
             }
             if(acao == Acao.DISPARAR) {
+                coordenadaDestinoItem2 = ControladorMario.buscaCoordenadaAdjacente(coordenadaDestinoItem1, direcao);
                 if(item instanceof Bonus || item == null) {
                     if(coordenadaDestinoItem2 != null) {
                         item = Mapa.getInstance().consultaItem(coordenadaDestinoItem2);
@@ -70,25 +75,26 @@ public class ControladorPartida {
                 }
             }
         }else{
-            System.out.println("A ação extrapola os limites do mapa ! Por favor escolha outra direção !");
+            System.out.println("\nA ação extrapola os limites do mapa ! Por favor escolha outra direção !\n");
         }
         ControladorInimigos.verificaPiranhaPlantAdjacente();
+        verificaEstadoJogo();
     }
 
-    public void exibirMapa() {
-        Coordenada coordenada = new Coordenada();
-        for (i = 0; i <= 9; i++) {
-            coordenada.setX(i);
-            for (int j = 0; j <= 9; j++) {
-                coordenada.setY(j);
-                if (Mapa.getInstance().consultaItem(coordenada) == null)
-                    System.out.printf(" |");
-                else
-                    System.out.printf("%c|", Mapa.getInstance().consultaItem(coordenada).getIcone());
-            }
-            System.out.printf("\n---------------------\n");
-        }
-        System.out.println("Quantidade de vidas Mario: "+ Mario.getInstance().getQuantidadeVidas());
-        System.out.println("Quantidade de moeda Mario: "+ Mario.getInstance().getQuantidadeMoedas());
+    public static void verificaEstadoJogo(){
+
+        if(Mario.getInstance().getQuantidadeVidas() > 0 && !ControladorMario.encontrouPrincesa())
+            estadoJogo = EstadoJogo.EM_ANDAMENTO;
+        else if(ControladorMario.encontrouPrincesa())
+            estadoJogo = EstadoJogo.VITORIA;
+        else
+            estadoJogo = EstadoJogo.DERROTA;
+    }
+
+    public static void reiniciaJogo(){
+
+        Mario.destroy();
+        Princesa.destroy();
+        Mapa.destroy();
     }
 }

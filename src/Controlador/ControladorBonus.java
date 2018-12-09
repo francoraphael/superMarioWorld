@@ -1,6 +1,10 @@
-package VisaoControlador;
+package Controlador;
 
-import Modelo.*;
+import Modelo.Adicional.Acao;
+import Modelo.Adicional.Bonus;
+import Modelo.Adicional.BonusTipo;
+import Modelo.Adicional.Mapa;
+import Modelo.Personagens.Mario;
 
 public class ControladorBonus {
 

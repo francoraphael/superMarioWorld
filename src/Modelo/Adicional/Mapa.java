@@ -1,4 +1,6 @@
-package Modelo;
+package Modelo.Adicional;
+
+import Modelo.Item;
 
 public class Mapa {
     private static Item[][] mapa;
@@ -11,10 +13,7 @@ public class Mapa {
         return ourInstance;
     }
 
-    private Mapa() {
-
-        this.mapa = new Item[10][10];
-    }
+    private Mapa() { this.mapa = new Item[10][10]; }
 
     public void salvarItem(Item item, Coordenada coordenada){
 
@@ -23,10 +22,7 @@ public class Mapa {
         this.mapa[coordenada.getX()][coordenada.getY()] = item;
     }
 
-    public Item consultaItem(Coordenada coordenada){
+    public Item consultaItem(Coordenada coordenada){ return mapa[coordenada.getX()][coordenada.getY()]; }
 
-        return mapa[coordenada.getX()][coordenada.getY()];
-    }
-
-
+    public static void destroy(){ ourInstance = null; }
 }

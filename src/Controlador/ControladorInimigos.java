@@ -1,11 +1,22 @@
-package VisaoControlador;
+package Controlador;
 
 import Modelo.*;
+import Modelo.Adicional.Acao;
+import Modelo.Adicional.Coordenada;
+import Modelo.Adicional.Direcao;
+import Modelo.Adicional.Mapa;
+import Modelo.Inimigos.Boo;
+import Modelo.Inimigos.Goomba;
+import Modelo.Inimigos.Inimigo;
+import Modelo.Inimigos.PiranhaPlant;
+import Modelo.Personagens.Mario;
+
 import java.util.Random;
 
 public class ControladorInimigos {
 
     public static void interageInimigo (Inimigo inimigo, Acao acao){
+
         if (inimigo instanceof Goomba){
             interageGoomba((Goomba)inimigo, acao);
         }else if (inimigo instanceof Boo){
@@ -23,6 +34,7 @@ public class ControladorInimigos {
     }
 
     private static void interageGoomba(Goomba goomba, Acao acao){
+
         Random aleatorio = new Random();
         if(acao == Acao.ANDAR){
             ControladorMario.interageMario();
@@ -39,6 +51,7 @@ public class ControladorInimigos {
     }
 
     private static void interagePiranhaPlant(PiranhaPlant piranhaPlant, Acao acao){
+
         Random aleatorio = new Random();
         if(acao == Acao.ANDAR){
             ControladorMario.interageMario();
@@ -50,14 +63,15 @@ public class ControladorInimigos {
                 ControladorMario.interageMario();
             }
         }else if(acao == Acao.DISPARAR){
-            piranhaPlant.setResistenciaFogoAtual(piranhaPlant.getResistenciaFogoAtual() - 25);
-            if(piranhaPlant.getResistenciaFogoAtual() == 0){
+            piranhaPlant.setResistenciaFogo(piranhaPlant.getResistenciaFogo() - 25);
+            if(piranhaPlant.getResistenciaFogo() == 0){
                 Mapa.getInstance().salvarItem(null, piranhaPlant.getCoordenada());
             }
         }
     }
 
     public static void verificaPiranhaPlantAdjacente(){
+
         Item item;
         Coordenada coordenada;
         for (Direcao direcao : Direcao.values()) {

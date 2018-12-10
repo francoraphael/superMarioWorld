@@ -43,8 +43,6 @@ public class ControladorPartida {
             coordenada.setY(i%10);
             Mapa.getInstance().salvarItem(itens.get(i), coordenada);
         }
-        ControladorInimigos.verificaPiranhaPlantAdjacente();
-        verificaEstadoJogo();
     }
 
     public void efetuarAcao(Acao acao, Direcao direcao) {

@@ -2,7 +2,7 @@ package Modelo;
 
 import Modelo.Adicional.Coordenada;
 
-public class Item {
+public abstract class Item {
 
     private Coordenada coordenada;
     private char icone;

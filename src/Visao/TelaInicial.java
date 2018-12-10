@@ -1,7 +1,5 @@
 package Visao;
 
-import Modelo.Personagens.Mario;
-
 public class TelaInicial implements Tela {
 
     public void criaTela(){
